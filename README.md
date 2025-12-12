@@ -1,7 +1,8 @@
 🔧 How It Works
 
-![3D](kicad3D.png)
+![3D](kicad3D.png){ 8cm }
 
+![nanomini](nano_mini.png){ 8cm }
 
 This system monitors and visualizes the fill level of an underground fuel/oil tank using:
 
