@@ -1,5 +1,7 @@
 🔧 How It Works
 
+https://github.com/ygueparm/tank-level-led/blob/master/kicad3D.png?raw=true
+
 This system monitors and visualizes the fill level of an underground fuel/oil tank using:
 
     A 0–1 bar pressure sensor (measuring static head pressure),
