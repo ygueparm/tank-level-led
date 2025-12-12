@@ -1,5 +1,8 @@
 🔧 How It Works
 
+![3D](kicad3D.png)
+
+
 This system monitors and visualizes the fill level of an underground fuel/oil tank using:
 
     A 0–1 bar pressure sensor (measuring static head pressure),
