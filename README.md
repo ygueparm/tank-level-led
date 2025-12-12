@@ -1,8 +1,9 @@
 🔧 How It Works
 
-![3D](kicad3D.png){ 8cm }
 
-![nanomini](nano_mini.png){ 8cm }
+<img src="kicad3D.png" width="400" alt="3D de l'afficheur led">
+
+<img src="nano_mini.png" width="400" alt="arduino nano mini">
 
 This system monitors and visualizes the fill level of an underground fuel/oil tank using:
 
