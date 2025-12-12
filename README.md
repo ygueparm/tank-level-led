@@ -1,6 +1,7 @@
 🔧 How It Works
 
-https://github.com/ygueparm/tank-level-led/blob/master/kicad3D.png?raw=true
+![3D](kicad3D.png)
+
 
 This system monitors and visualizes the fill level of an underground fuel/oil tank using:
 
