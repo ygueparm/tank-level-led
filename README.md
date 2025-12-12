@@ -23,23 +23,14 @@ All calculations are based on empirical measurements (not just theoretical formu
 Parameter
 	
 Value
-Empty tank
-	
-0.00 bar (4.28 mA)
-Full tank
-	
-0.21 bar (7.46 mA)
-Pump shut-off (dynamic)
-	
-0.43 bar (prevents overfill during pump operation)
-Pump start threshold
-	
-≤15% level
-Display update interval
-	
-5 seconds (via millis() — non-blocking)
-Smoothing
-	
+Empty tank  0.00 bar (4.28 mA)
+
+Full tank 0.21 bar (7.46 mA)
+
+Pump shut-off (dynamic) 0.43 bar (prevents overfill during pump operation)
+
+Pump start threshold ≤15% level
+
 10-sample moving average on analog readings
 🌟 Key Features
 
