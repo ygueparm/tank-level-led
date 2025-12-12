@@ -39,9 +39,9 @@ Smoothing
 🌟 Key Features
 
     ✅ Startup LED test — visual confirmation of all LEDs and level simulation  
-    📈 Progressive LED bar — linear mapping of pressure → fill level (0 to 10 LEDs = 0% to 100%)  
+    📈 Progressive LED bar — linear mapping of pressure → fill level (0 to 8 LEDs = 0% to 100%)  
     ⚠️ Critical-level alert — first LED blinks when level ≤10% (low fuel warning)  
-    🔄 Hysteresis-based pump control — avoids rapid ON/OFF cycling:  
+    🔄 Hysteresis-based pump control — avoids rapid ON/OFF cycling with a ssr you can command a pump on D11:
         Pump starts when level ≤15%  
         Pump stops when dynamic pressure ≥ 0.43 bar (measured during pumping)
     📋 Live serial dashboard — ASCII bar graph + status in real time:
