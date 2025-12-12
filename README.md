@@ -14,6 +14,11 @@ This system monitors and visualizes the fill level of an underground fuel/oil ta
 
 📊 Calibration & Real-World Parameters
 
+in my home my tank is outdoor, and at 2 meter, i use it for the garden, en full it with a pump from underground or rain water, so i bought a 4-20 pressure sensors 
+
+
+<img src="capteurdepression.png" width="400" alt="arduino nano mini">
+
 All calculations are based on empirical measurements (not just theoretical formulas), making the system robust to sensor drift or installation-specific conditions:
 Parameter
 	
