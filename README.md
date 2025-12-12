@@ -1,5 +1,5 @@
 🔧 How It Works
-
+1bar = 10 meter (approximatly)
 
 <img src="kicad3D.png" width="400" alt="3D de l'afficheur led">
 
@@ -9,7 +9,7 @@ This system monitors and visualizes the fill level of an underground fuel/oil ta
 
     A 0–1 bar pressure sensor (measuring static head pressure),
     An Arduino Nano for signal processing and control,
-    A 10-LED bar for intuitive visual feedback,
+    A 8-LED bar for intuitive visual feedback,
     A solid-state relay (SSR) to automate a pump based on level thresholds.
 
 📊 Calibration & Real-World Parameters
