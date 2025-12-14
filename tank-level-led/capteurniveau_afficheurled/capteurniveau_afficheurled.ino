@@ -41,6 +41,7 @@ float dernierePression = -1.0;
 
 // État de la pompe (avec hystérésis pour éviter les cycles rapides)
 bool pompeActive = false;
+bool initialisationTerminee = false;  // Flag pour éviter démarrage intempestif au boot
 
 void setup() {
   Serial.begin(9600);
@@ -89,6 +90,33 @@ void loop() {
   // Conversion en pression selon vos mesures réelles
   float pression = convertirPressionReelle(current);
   
+  // Phase d'initialisation : attendre que les lectures soient stables
+  static int compteurInit = 0;
+  if (!initialisationTerminee) {
+    compteurInit++;
+    if (compteurInit >= numReadings * 2) {
+      // Après 2 cycles complets de moyenne glissante
+      initialisationTerminee = true;
+      Serial.print("Initialisation terminée - Pression: ");
+      Serial.print(pression, 3);
+      Serial.println(" bar");
+      
+      // Déterminer l'état initial de la pompe selon le niveau actuel
+      float pourcentage = mapFloat(pression, pressionVide, pressionPleine, 0.0, 100.0);
+      if (pourcentage <= seuilDemarragePompe) {
+        // Niveau bas : la pompe doit démarrer
+        pompeActive = true;
+        digitalWrite(pinSSR, HIGH);
+        Serial.println(">>> État initial: POMPE ON (niveau bas) <<<");
+      } else {
+        // Niveau suffisant : pompe reste arrêtée
+        pompeActive = false;
+        digitalWrite(pinSSR, LOW);
+        Serial.println(">>> État initial: POMPE OFF (niveau suffisant) <<<");
+      }
+    }
+  }
+  
   // Mettre à jour l'affichage LED si changement significatif
   if (abs(pression - dernierePression) > 0.01) {
     dernierePression = pression;
@@ -97,8 +125,10 @@ void loop() {
   // Mettre à jour les LEDs (géré dans la fonction pour le clignotement)
   afficherNiveauLEDs(pression);
   
-  // Gestion de la pompe avec hystérésis
-  gererPompe(pression);
+  // Gestion de la pompe uniquement après initialisation
+  if (initialisationTerminee) {
+    gererPompe(pression);
+  }
   
   // Affichage série toutes les 5 secondes
   unsigned long currentMillis = millis();
