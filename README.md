@@ -42,7 +42,7 @@ Pump start threshold ≤15% level
         Pump stops when dynamic pressure ≥ 0.43 bar (measured during pumping)
     📋 Live serial dashboard — ASCII bar graph + status in real time:
 
-
+```
 Affichage LED: 0.00 - 0.21 bar (0.21 = toutes LEDs)
 Courant: 4.28mA (0 bar) à 20.0mA (1 bar)
 Pompe: Démarre à 0.15 bar / Arrête à 0.45 bar
@@ -54,7 +54,7 @@ Initialisation terminée - Pression: 0.000 bar
 >>> État initial: POMPE ON (niveau bas) <<<
 0.000 bar | 0.0%   | ░░░░░░░░ | VIDE | ON | Courant: 0.00mA | LED%: 0.0%
 0.210 bar | 100.0% | ███████░ | Pleine | OFF | Courant: 7.21mA | LED%: 100.0%
-
+```
 
 📐 Wiring Hint
 
