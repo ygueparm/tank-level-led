@@ -14,17 +14,17 @@ const int pinSSR = 11;
 // Seuils de démarrage et arrêt de la pompe
 const float seuilDemarragePompe = 15.0;  // Démarre à 15% de remplissage
 const float seuilArretPompe = 95.0;      // S'arrête à 95% (plein -5%)
-const float pressionArretPompe = 0.43;   // Pression seuil d'arrêt (0.45 bar - 5%)
+const float pressionArretPompe = 0.45;   // Pression seuil d'arrêt (0.45 bar)
 
-// MESURES RÉELLES DE VOTRE CAPTEUR
-// Cuve vide : 4.28mA = 0.00 bar
-// Cuve pleine statique : 7.46mA = 0.21 bar
-// Cuve pleine dynamique (pompe en marche) : 0.45 bar
-const float currentVide = 4.28;     // 4.28mA mesuré
-const float currentPleine = 7.46;   // 7.46mA mesuré
-const float pressionVide = 0.00;    // Pression à cuve vide
-const float pressionPleine = 0.21;  // Pression à cuve pleine statique
-const float pressionPleineDynamique = 0.45;  // Pression réelle en dynamique (pompe active)
+// === PLAGE COMPLÈTE pour affichage pression : 0-1 BAR ===
+const float courantVide = 4.28;      // 4.28mA = 0.00 bar
+const float courantPleine = 20.0;    // 20.0mA = 1.00 bar (standard)
+
+const float pressionMin = 0.00;      // 0% = 0.00 bar
+const float pressionMax = 1.00;      // 100% = 1.00 bar
+
+// === PLAGE LIMITÉE pour affichage LED : 0-0.21 BAR ===
+const float pressionMaxLED = 0.21;   // 0.21 bar = toutes les LEDs allumées
 
 // Variables pour la moyenne glissante
 int readings[numReadings];
@@ -39,9 +39,9 @@ const unsigned long affichageInterval = 5000;
 // Dernière pression pour éviter les mises à jour inutiles des LEDs
 float dernierePression = -1.0;
 
-// État de la pompe (avec hystérésis pour éviter les cycles rapides)
+// État de la pompe
 bool pompeActive = false;
-bool initialisationTerminee = false;  // Flag pour éviter démarrage intempestif au boot
+bool initialisationTerminee = false;
 
 void setup() {
   Serial.begin(9600);
@@ -54,7 +54,7 @@ void setup() {
   
   // Initialiser le pin du SSR
   pinMode(pinSSR, OUTPUT);
-  digitalWrite(pinSSR, LOW);  // Pompe arrêtée au démarrage
+  digitalWrite(pinSSR, LOW);
   
   // Initialiser le tableau des mesures
   for (int i = 0; i < numReadings; i++) {
@@ -66,10 +66,10 @@ void setup() {
   
   Serial.println("========================================");
   Serial.println("CAPTEUR NIVEAU CUVE");
-  Serial.println("Plage: 0.00 bar (vide) à 0.21 bar (pleine)");
-  Serial.println("Dynamique pompe: 0.45 bar max");
-  Serial.println("Courant: 4.28mA à 7.46mA");
-  Serial.println("Pompe: Démarre à 15% / Arrête à 0.43 bar");
+  Serial.println("Affichage pression: 0.00 - 1.00 bar");
+  Serial.println("Affichage LED: 0.00 - 0.21 bar (0.21 = toutes LEDs)");
+  Serial.println("Courant: 4.28mA (0 bar) à 20.0mA (1 bar)");
+  Serial.println("Pompe: Démarre à 0.15 bar / Arrête à 0.45 bar");
   Serial.println("========================================");
   Serial.println("Pression | % Remplissage | Barre LEDs | Pompe");
   Serial.println("---------|---------------|------------|------");
@@ -85,31 +85,27 @@ void loop() {
   
   // Calcul de la pression
   float voltage = average * (5.0 / 1023.0);
-  float current = (voltage / R_shunt) * 1000;
+  float courant = (voltage / R_shunt) * 1000;
   
-  // Conversion en pression selon vos mesures réelles
-  float pression = convertirPressionReelle(current);
+  // === CONVERSION POUR AFFICHAGE : 0-1 bar ===
+  float pression = convertir4_20mA_vers_Bar(courant);
   
-  // Phase d'initialisation : attendre que les lectures soient stables
+  // Phase d'initialisation
   static int compteurInit = 0;
   if (!initialisationTerminee) {
     compteurInit++;
     if (compteurInit >= numReadings * 2) {
-      // Après 2 cycles complets de moyenne glissante
       initialisationTerminee = true;
       Serial.print("Initialisation terminée - Pression: ");
       Serial.print(pression, 3);
       Serial.println(" bar");
       
-      // Déterminer l'état initial de la pompe selon le niveau actuel
-      float pourcentage = mapFloat(pression, pressionVide, pressionPleine, 0.0, 100.0);
-      if (pourcentage <= seuilDemarragePompe) {
-        // Niveau bas : la pompe doit démarrer
+      float pourcentageLED = mapFloat(pression, 0.0, pressionMaxLED, 0.0, 100.0);
+      if (pourcentageLED <= seuilDemarragePompe) {
         pompeActive = true;
         digitalWrite(pinSSR, HIGH);
         Serial.println(">>> État initial: POMPE ON (niveau bas) <<<");
       } else {
-        // Niveau suffisant : pompe reste arrêtée
         pompeActive = false;
         digitalWrite(pinSSR, LOW);
         Serial.println(">>> État initial: POMPE OFF (niveau suffisant) <<<");
@@ -122,10 +118,10 @@ void loop() {
     dernierePression = pression;
   }
   
-  // Mettre à jour les LEDs (géré dans la fonction pour le clignotement)
+  // Mettre à jour les LEDs (avec plage limitée 0-0.21 bar)
   afficherNiveauLEDs(pression);
   
-  // Gestion de la pompe uniquement après initialisation
+  // Gestion de la pompe (utilise la pression réelle 0-1 bar)
   if (initialisationTerminee) {
     gererPompe(pression);
   }
@@ -135,30 +131,35 @@ void loop() {
   if (currentMillis - previousMillis >= affichageInterval) {
     previousMillis = currentMillis;
     
-    // Calcul du pourcentage de remplissage
-    float pourcentage = mapFloat(pression, pressionVide, pressionPleine, 0.0, 100.0);
-    pourcentage = constrain(pourcentage, 0.0, 100.0);
+    // Pourcentage basé sur 0-1 bar
+    float pourcentageReel = pression * 100.0;
     
-    // Nombre de LEDs allumées
-    int ledsAllumees = mapFloat(pression, pressionVide, pressionPleine, 0, nbLeds);
+    // Pourcentage pour l'affichage LED (0-0.21 bar)
+    float pourcentageLED = mapFloat(pression, 0.0, pressionMaxLED, 0.0, 100.0);
+    pourcentageLED = constrain(pourcentageLED, 0.0, 100.0);
+    
+    // Nombre de LEDs allumées (basé sur 0-0.21 bar)
+    int ledsAllumees = mapFloat(pression, 0.0, pressionMaxLED, 0, nbLeds);
     ledsAllumees = constrain(ledsAllumees, 0, nbLeds);
     
     // Affichage formaté
     Serial.print(pression, 3);
     Serial.print(" bar | ");
-    Serial.print(pourcentage, 1);
+    Serial.print(pourcentageReel, 1);  // Pourcentage réel 0-100%
     Serial.print("% | ");
     
-    // Barre graphique
+    // Barre graphique (basée sur 0-0.21 bar)
     for (int i = 0; i < nbLeds; i++) {
       Serial.print(i < ledsAllumees ? "█" : "░");
     }
     
-    // État texte
+    // État texte (basé sur affichage LED)
     Serial.print(" | ");
-    if (pourcentage <= 5.0) {
+    if (pourcentageLED <= 5.0) {
       Serial.print("VIDE");
-    } else if (pourcentage >= 95.0) {
+    } else if (pression >= pressionMaxLED) {
+      Serial.print("MAX LED");
+    } else if (pourcentageLED >= 95.0) {
       Serial.print("PLEINE");
     } else {
       Serial.print("Niveau ");
@@ -167,37 +168,38 @@ void loop() {
     
     // État de la pompe
     Serial.print(" | ");
-    Serial.println(pompeActive ? "ON" : "OFF");
+    Serial.print(pompeActive ? "ON" : "OFF");
+    
+    // Info supplémentaire
+    Serial.print(" | Courant: ");
+    Serial.print(courant, 2);
+    Serial.print("mA | LED%: ");
+    Serial.print(pourcentageLED, 1);
+    Serial.println("%");
   }
   
   delay(50);
 }
 
-// Conversion basée sur vos mesures réelles
-float convertirPressionReelle(float courant) {
-  if (courant <= currentVide) {
-    return pressionVide;
-  } else if (courant >= currentPleine) {
-    return pressionPleine;
-  } else {
-    return pressionVide + (courant - currentVide) * (pressionPleine - pressionVide) / (currentPleine - currentVide);
-  }
+// Conversion 4-20mA → 0-1 bar
+float convertir4_20mA_vers_Bar(float courant) {
+  courant = constrain(courant, courantVide, courantPleine);
+  return (courant - courantVide) * (pressionMax - pressionMin) / 
+         (courantPleine - courantVide);
 }
 
-// Gestion de la pompe avec hystérésis
+// Gestion de la pompe (utilise pression 0-1 bar)
 void gererPompe(float pression) {
-  float pourcentage = mapFloat(pression, pressionVide, pressionPleine, 0.0, 100.0);
-  pourcentage = constrain(pourcentage, 0.0, 100.0);
+  // Pour la pompe, on utilise la pression réelle (0-1 bar)
+  // ou on peut convertir en pourcentage LED si préféré
+  float pourcentageLED = mapFloat(pression, 0.0, pressionMaxLED, 0.0, 100.0);
   
-  // Hystérésis : démarre à 15%, s'arrête à 0.43 bar (mesure dynamique)
-  if (!pompeActive && pourcentage <= seuilDemarragePompe) {
-    // Niveau bas : démarrer la pompe
+  if (!pompeActive && pourcentageLED <= seuilDemarragePompe) {
     pompeActive = true;
     digitalWrite(pinSSR, HIGH);
     Serial.println(">>> POMPE DÉMARRÉE (niveau bas) <<<");
   } 
   else if (pompeActive && pression >= pressionArretPompe) {
-    // Pression dynamique atteinte : arrêter la pompe
     pompeActive = false;
     digitalWrite(pinSSR, LOW);
     Serial.print(">>> POMPE ARRÊTÉE (");
@@ -206,32 +208,45 @@ void gererPompe(float pression) {
   }
 }
 
-// Affichage sur les LEDs avec gestion du clignotement
+// Affichage sur les LEDs (PLAGE LIMITÉE 0-0.21 bar)
 void afficherNiveauLEDs(float pression) {
-  float pourcentage = mapFloat(pression, pressionVide, pressionPleine, 0.0, 100.0);
-  pourcentage = constrain(pourcentage, 0.0, 100.0);
+  // Convertir pression 0-1 bar → plage LED 0-0.21 bar
+  float pressionLED = min(pression, pressionMaxLED);
+  float pourcentageLED = mapFloat(pressionLED, 0.0, pressionMaxLED, 0.0, 100.0);
   
-  int ledsAllumees = mapFloat(pression, pressionVide, pressionPleine, 0, nbLeds);
+  int ledsAllumees = mapFloat(pressionLED, 0.0, pressionMaxLED, 0, nbLeds);
   ledsAllumees = constrain(ledsAllumees, 0, nbLeds);
   
-  // Gestion du clignotement pour niveau critique (≤10%)
+  // Si pression > 0.21 bar, on fait clignoter la dernière LED
   static unsigned long dernierClignotement = 0;
   static bool etatClignotement = false;
   
-  if (pourcentage <= 10.0) {
-    // Clignotement toutes les secondes
+  if (pression > pressionMaxLED) {
+    // Mode dépassement : dernière LED clignote
+    if (millis() - dernierClignotement >= 500) {
+      dernierClignotement = millis();
+      etatClignotement = !etatClignotement;
+    }
+    
+    // Toutes les LEDs allumées + dernière clignote
+    for (int i = 0; i < nbLeds - 1; i++) {
+      digitalWrite(leds[i], HIGH);
+    }
+    digitalWrite(leds[nbLeds - 1], etatClignotement ? HIGH : LOW);
+  }
+  else if (pourcentageLED <= 10.0) {
+    // Clignotement niveau critique (≤10%)
     if (millis() - dernierClignotement >= 1000) {
       dernierClignotement = millis();
       etatClignotement = !etatClignotement;
     }
     
-    // Mode clignotement : première LED clignote, autres éteintes
     digitalWrite(leds[0], etatClignotement ? HIGH : LOW);
     for (int i = 1; i < nbLeds; i++) {
       digitalWrite(leds[i], LOW);
     }
   } else {
-    // Affichage normal : barre progressive
+    // Affichage normal
     for (int i = 0; i < nbLeds; i++) {
       digitalWrite(leds[i], i < ledsAllumees ? HIGH : LOW);
     }
@@ -240,31 +255,34 @@ void afficherNiveauLEDs(float pression) {
 
 // Test des LEDs au démarrage
 void testLeds() {
-  // Remplissage progressif
-  for (int i = 0; i < nbLeds; i++) {
-    digitalWrite(leds[i], HIGH);
-    delay(150);
-  }
-  delay(500);
+  Serial.println("Test LEDs: 0.00 → 0.21 bar");
   
-  // Vidage progressif
-  for (int i = nbLeds - 1; i >= 0; i--) {
-    digitalWrite(leds[i], LOW);
-    delay(150);
-  }
-  delay(500);
-  
-  // Simulation des niveaux de 0 à 0.21 bar
-  for (float p = pressionVide; p <= pressionPleine; p += 0.03) {
-    int ledsAllumees = mapFloat(p, pressionVide, pressionPleine, 0, nbLeds);
+  // Simulation de 0.00 à 0.21 bar
+  for (float p = 0.00; p <= pressionMaxLED; p += 0.03) {
+    int ledsAllumees = mapFloat(p, 0.0, pressionMaxLED, 0, nbLeds);
     ledsAllumees = constrain(ledsAllumees, 0, nbLeds);
+    
+    Serial.print("Pression: ");
+    Serial.print(p, 2);
+    Serial.print(" bar → LEDs: ");
+    Serial.println(ledsAllumees);
+    
     for (int i = 0; i < nbLeds; i++) {
       digitalWrite(leds[i], i < ledsAllumees ? HIGH : LOW);
     }
-    delay(200);
+    delay(300);
   }
   
-  // Éteindre toutes les LEDs à la fin du test
+  // Test dépassement (clignotement dernière LED)
+  Serial.println("Test dépassement (>0.21 bar)");
+  for (int i = 0; i < 10; i++) {
+    digitalWrite(leds[nbLeds - 1], HIGH);
+    delay(300);
+    digitalWrite(leds[nbLeds - 1], LOW);
+    delay(300);
+  }
+  
+  // Éteindre toutes les LEDs
   for (int i = 0; i < nbLeds; i++) {
     digitalWrite(leds[i], LOW);
   }
