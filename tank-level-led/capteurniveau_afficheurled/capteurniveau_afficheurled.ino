@@ -14,14 +14,14 @@ const int pinSSR = 11;
 // Seuils de démarrage et arrêt de la pompe
 const float seuilDemarragePompe = 15.0;  // Démarre à 15% de remplissage
 const float seuilArretPompe = 95.0;      // S'arrête à 95% (plein -5%)
-const float pressionArretPompe = 0.45;   // Pression seuil d'arrêt (0.45 bar)
+const float pressionArretPompe = 0.45;   // Pression seuil d'arrêt reel mesuré lors d'essai (0.45 bar)
 
 // === PLAGE COMPLÈTE pour affichage pression : 0-1 BAR ===
-const float courantVide = 4.28;      // 4.28mA = 0.00 bar
-const float courantPleine = 20.0;    // 20.0mA = 1.00 bar (standard)
+const float courantVide = 4.28;      // 4.28mA = 0.00 bar mesure reel a modifié suivant le capeur
+const float courantPleine = 20.0;    // 20.0mA = 1.00 bar (standard) a rempalcé suivant le capteur utilisé
 
 const float pressionMin = 0.00;      // 0% = 0.00 bar
-const float pressionMax = 1.00;      // 100% = 1.00 bar
+const float pressionMax = 1.00;      // 100% = 1.00 bar pareil a mettre a jour suivant le capteur utilisé
 
 // === PLAGE LIMITÉE pour affichage LED : 0-0.21 BAR ===
 const float pressionMaxLED = 0.21;   // 0.21 bar = toutes les LEDs allumées
@@ -60,6 +60,7 @@ void setup() {
   for (int i = 0; i < numReadings; i++) {
     readings[i] = 0;
   }
+  
   
   // Test des LEDs au démarrage
   testLeds();

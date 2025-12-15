@@ -14,7 +14,7 @@ This system monitors and visualizes the fill level of an underground fuel/oil ta
 
 📊 Calibration & Real-World Parameters
 
-in my home my tank is outdoor, and at 2 meter, i use it for the garden, en full it with a pump from underground or rain water, so i bought a 4-20 pressure sensors 
+in my home my tank is outdoor, and at 2 meter, i use it for the garden, and full it with a pump from underground or rain water, so i bought a 4-20 pressure sensors t osee if i need to full it or not
 
 
 <img src="capteurdepression.png" width="400" alt="arduino nano mini">
@@ -43,11 +43,18 @@ Pump start threshold ≤15% level
     📋 Live serial dashboard — ASCII bar graph + status in real time:
 
 
+Affichage LED: 0.00 - 0.21 bar (0.21 = toutes LEDs)
+Courant: 4.28mA (0 bar) à 20.0mA (1 bar)
+Pompe: Démarre à 0.15 bar / Arrête à 0.45 bar
+========================================
 Pression | % Remplissage | Barre LEDs | Pompe
 ---------|---------------|------------|------
-0.092 bar | 43.8% | ████░░░░░░ | Niveau 4 | OFF
-0.018 bar | 8.6%  | █░░░░░░░░░ | VIDE    | ON   ← pump just started!
->>> POMPE DÉMARRÉE (niveau bas) <<<
+0.000 bar | 0.0% | ░░░░░░░░ | VIDE | OFF | Courant: 0.00mA | LED%: 0.0%
+Initialisation terminée - Pression: 0.000 bar
+>>> État initial: POMPE ON (niveau bas) <<<
+0.000 bar | 0.0%   | ░░░░░░░░ | VIDE | ON | Courant: 0.00mA | LED%: 0.0%
+0.210 bar | 100.0% | ███████░ | Pleine | OFF | Courant: 7.21mA | LED%: 100.0%
+
 
 📐 Wiring Hint
 
