@@ -63,3 +63,7 @@ Initialisation terminée - Pression: 0.000 bar
     SSR control → pinSSR → triggers external pump contactor
 
     🔧 Note: The linear conversion convertirPressionReelle() uses real current-to-pressure calibration points — easily adaptable to other sensors.
+    
+    
+    
+<img src="schemamontage.jpg" width="800" alt="schema de montage">
