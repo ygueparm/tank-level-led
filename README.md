@@ -1,5 +1,5 @@
 🔍 **Menu de navigation rapide**
-- [🎯 How It Works](#-How-It-Works)
+- [🔧 How It Works](#-How-It-Works)
 - [📊 Calibration & Real-World Parameters](#-calibration--real-world-parameters)
 - [🌟 Key Features](#-key-features)
 - [🔧 Wiring Hint](#-wiring-hint)
@@ -8,7 +8,7 @@
 ---
 
 
-## 🔧 How It Works
+## 🔧 How It Works
 1bar = 10 meter (approximatly)
 
 <img src="kicad3D.png" width="400" alt="3D de l'afficheur led">
