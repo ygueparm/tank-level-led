@@ -1,3 +1,13 @@
+🔍 **Menu de navigation rapide**
+- [🎯 How It Works](#-how-it-works)
+- [📊 Calibration & Real-World Parameters](#-calibration--real-world-parameters)
+- [🌟 Key Features](#-key-features)
+- [🔧 Wiring Hint](#-wiring-hint)
+- [🙏 Acknowledgments](#acknowledgments)
+
+---
+
+
 🔧 How It Works
 1bar = 10 meter (approximatly)
 
