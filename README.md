@@ -77,7 +77,7 @@ Initialisation terminée - Pression: 0.000 bar
 
 This project wouldn’t be where it is today without the generous support of the open-source hardware community—and especially **[PCBWay](https://www.pcbway.com/)**.
 
-Thanks to their **free PCB prototyping program for makers**, I was able to fabricate a revised version (**v1.1**) of the tank-level LED controller board. The original design contained a subtle but critical pin assignment error 
+ I was able to fabricate a revised version (**v1.1**) of the tank-level LED controller board. The original design contained a subtle but critical pin assignment error 
 
 Having access to physical prototypes at no cost allowed me to:
 - ✅ Identify and confirm the hardware bug,
@@ -91,4 +91,4 @@ A sincere thank you to the PCBWay team—you’ve helped turn a flawed prototype
 
 for all my project i use it, and i was always really impress with the quality even for my very little electronic project.
 
-> 🔗 Learn more about their [PCB Assembly](https://www.pcbway.com/pcbassembly/) and [Prototype Support Program](https://www.pcbway.com/project/)
+
