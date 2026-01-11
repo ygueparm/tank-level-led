@@ -1,5 +1,5 @@
 🔍 **Menu de navigation rapide**
-- [🎯 How It Works](#-how-it-works)
+- [🎯 How It Works](#How It Works)
 - [📊 Calibration & Real-World Parameters](#-calibration--real-world-parameters)
 - [🌟 Key Features](#-key-features)
 - [🔧 Wiring Hint](#-wiring-hint)
@@ -8,7 +8,7 @@
 ---
 
 
-🔧 How It Works
+## 🔧 How It Works
 1bar = 10 meter (approximatly)
 
 <img src="kicad3D.png" width="400" alt="3D de l'afficheur led">
@@ -24,7 +24,7 @@ This system monitors and visualizes the fill level of an underground fuel/oil ta
     A 8-LED bar for intuitive visual feedback,
     A solid-state relay (SSR) to automate a pump based on level thresholds.
 
-📊 Calibration & Real-World Parameters
+## 📊 Calibration & Real-World Parameters
 
 in my home my tank is outdoor, and at 2 meter, i use it for the garden, and full it with a pump from underground or rain water, so i bought a 4-20 pressure sensors t osee if i need to full it or not
 
@@ -44,7 +44,7 @@ Pump shut-off (dynamic) 0.43 bar (prevents overfill during pump operation)
 Pump start threshold ≤15% level
 
 10-sample moving average on analog readings
-🌟 Key Features
+## 🌟 Key Features
 
     ✅ Startup LED test — visual confirmation of all LEDs and level simulation  
     📈 Progressive LED bar — linear mapping of pressure → fill level (0 to 8 LEDs = 0% to 100%)  
@@ -68,7 +68,7 @@ Initialisation terminée - Pression: 0.000 bar
 0.210 bar | 100.0% | ███████░ | Pleine | OFF | Courant: 7.21mA | LED%: 100.0%
 ```
 
-📐 Wiring Hint
+## 📐 Wiring Hint
 
     Sensor → analogPin (via shunt resistor for 4–20 mA loop)  
     LEDs → digital pins (simple HIGH/LOW, no PWM needed)  
