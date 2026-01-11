@@ -1,5 +1,5 @@
 🔍 **Menu de navigation rapide**
-- [🎯 How It Works](#How It Works)
+- [🎯 How It Works](#-How-It-Works)
 - [📊 Calibration & Real-World Parameters](#-calibration--real-world-parameters)
 - [🌟 Key Features](#-key-features)
 - [🔧 Wiring Hint](#-wiring-hint)
