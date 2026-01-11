@@ -69,3 +69,26 @@ Initialisation terminée - Pression: 0.000 bar
     
     
 <img src="schemamontage.jpg" width="800" alt="schema de montage">
+
+
+# Acknowledgments
+
+<img src="pcbway.png" alt="pcbway">
+
+This project wouldn’t be where it is today without the generous support of the open-source hardware community—and especially **[PCBWay](https://www.pcbway.com/)**.
+
+Thanks to their **free PCB prototyping program for makers**, I was able to fabricate a revised version (**v1.1**) of the tank-level LED controller board. The original design contained a subtle but critical pin assignment error 
+
+Having access to physical prototypes at no cost allowed me to:
+- ✅ Identify and confirm the hardware bug,
+- ✅ Iterate on the layout with confidence,
+- ✅ Validate signal integrity and power distribution,
+- ✅ And ultimately deliver a more reliable, functional design.
+
+PCBWay’s commitment to empowering independent developers, students, and hobbyists like me truly accelerates innovation at the grassroots level. Their fast turnaround, consistent quality, and maker-friendly approach make them a standout partner in the electronics ecosystem.
+
+A sincere thank you to the PCBWay team—you’ve helped turn a flawed prototype into a working solution! 🙏 and i am very proud to be selected by your team
+
+for all my project i use it, and i was always really impress with the quality even for my very little electronic project.
+
+> 🔗 Learn more about their [PCB Assembly](https://www.pcbway.com/pcbassembly/) and [Prototype Support Program](https://www.pcbway.com/project/)
