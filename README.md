@@ -13,7 +13,7 @@
 
 <img src="kicad3D.png" width="400" alt="3D de l'afficheur led">
 
-<img src="pcb.png" width="400" alt="pcb bare led">
+<img src="pcb.png" width="400" alt="pcb bare led"><img src="img2(1)" width="400" alt="pcb bare led">
 
 <img src="nano_mini.png" width="400" alt="arduino nano mini">
 
@@ -99,6 +99,7 @@ PCBWay’s commitment to empowering independent developers, students, and hobbyi
 
 A sincere thank you to the PCBWay team—you’ve helped turn a flawed prototype into a working solution! 🙏 and i am very proud to be selected by your team
 
-for all my project i use it, and i was always really impress with the quality even for my very little electronic project.
+
+<img src="img1(1).jpb" width="800" alt="pcb">
 
 
