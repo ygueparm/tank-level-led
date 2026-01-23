@@ -79,7 +79,7 @@ Initialisation terminée - Pression: 0.000 bar
     
     
 <img src="schemamontage.jpg" width="800" alt="schema de montage">
-
+<img src="fini.jpg" width="800" alt="schema de montage">
 
 # Acknowledgments
 
